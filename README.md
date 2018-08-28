@@ -21,9 +21,6 @@ Every data provider must extend the ``DataProvider`` abstract class or implement
 interface ```DataProviderInterface```. Check the source code of the abstract data provider, there are some useful things
 to discover.
 
-It's important to update the ```count``` property when you process data from the external source. During the processing,
-you can decide to skip some data (invalid data, missing values, ...) so we can not use the SQL count feature.
-
 Try to do most of the data cleaning up in the data provider, so the data would arrive to the importer ready for insertion.
 Basically the array build by the provider should contains the data with the property name that match your node type property name.
 If you need to transport value that will not match the node properties, please prefix them with '_'.
@@ -125,8 +122,6 @@ class BasicDataProvider extends DataProvider {
 				'name' => String::create($demoRecord['name'])->getValue()
 			];
 		}
-
-		$this->count = count($result);
 
 		return $result;
 	}
