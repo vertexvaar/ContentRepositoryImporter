@@ -39,13 +39,13 @@ if you run twice the same import, the imported node will be updated and not crea
 Your provider should output something like this:
 
 ```
-	[
-		'__label' => 'The external content lable, for internal use'
-		'__externalIdentifier' => 'The external external identifier, for internal use'
-		'title' => 'My title'
-		'year' => 1999
-		'text' => '...'
-	]
+[
+    '__label' => 'The external content lable, for internal use'
+    '__externalIdentifier' => 'The external external identifier, for internal use'
+    'title' => 'My title'
+    'year' => 1999
+    'text' => '...'
+]
 ```
 
 **Tips**: If your provider does not return an array, you MUST registrer a TypeConverter to convert it to an array. The property mapper is
@@ -56,24 +56,24 @@ used automatically by the Importer.
 If your data provider follow this convention, the importer can automatically create variants of your nodes:
 
 ```
-	[
-		'__label' => 'The external content lable, for internal use'
-		'__externalIdentifier' => 'The external external identifier, for internal use'
-		'title' => 'My title'
-		'year' => 1999
-		'text' => '...',
+[
+    '__label' => 'The external content lable, for internal use'
+    '__externalIdentifier' => 'The external external identifier, for internal use'
+    'title' => 'My title'
+    'year' => 1999
+    'text' => '...',
 
-	    '@dimensions' => [
-		   '@en' => [
-			   '@strategy' => 'merge',
-			   'title' => '...',
-		   ],
-		   '@fr' => [
-			   '@strategy' => 'merge',
-			   'title' => '...',
-		   ],
-	    ]
-	]
+    '@dimensions' => [
+        '@en' => [
+            '@strategy' => 'merge',
+            'title' => '...',
+        ],
+        '@fr' => [
+            '@strategy' => 'merge',
+            'title' => '...',
+        ],
+    ]
+]
 ```
 
 The ```@en``` is a preset name, you must configuration the presets on your ```Settings.yaml```:
@@ -84,11 +84,11 @@ Ttree:
     dimensionsImporter:
       presets:
         fr:
-	  language: ['fr', 'en', 'de']
+      language: ['fr', 'en', 'de']
         en:
-	  language: ['en', 'de']
+      language: ['en', 'de']
         de:
-	  language: ['de']
+      language: ['de']
 ```
 
 ### Share data between preset parts
@@ -103,29 +103,29 @@ The cache is flushed if you call ```flow import:init --preset your-preset```.
 ### Basic provider
 
 ```php
-class BasicDataProvider extends DataProvider {
+class BasicDataProvider extends DataProvider
+{
+    /**
+     * @return array
+     */
+    public function fetch()
+    {
+        $result = [];
+        $query = $this->createQuery()
+            ->select('*')
+            ->from('demo_table', 'd')
+            ->orderBy('d.name');
 
-	/**
-	 * @return array
-	 */
-	public function fetch() {
-		$result = [];
-		$query = $this->createQuery()
-			->select('*')
-			->from('demo_table', 'd')
-			->orderBy('d.name');
+        $statement = $query->execute();
+        while ($demoRecord = $statement->fetch()) {
+            $result[] = [
+                '__externalIdentifier' => (integer)$demoRecord['id'],
+                'name' => String::create($demoRecord['name'])->getValue()
+            ];
+        }
 
-		$statement = $query->execute();
-		while ($demoRecord = $statement->fetch()) {
-			$result[] = [
-				'__externalIdentifier' => (integer)$demoRecord['id'],
-				'name' => String::create($demoRecord['name'])->getValue()
-			];
-		}
-
-		return $result;
-	}
-
+        return $result;
+    }
 }
 ```
 
@@ -141,7 +141,6 @@ Do not forget to register the processed nodes with `registerNodeProcessing`. The
 ```php
 class ProductImporter extends AbstractImporter
 {
-
     /**
      * @var string
      */
@@ -176,7 +175,6 @@ class ProductImporter extends AbstractImporter
         $nodeTemplate = new NodeTemplate();
         $this->processBatch($nodeTemplate);
     }
-
 }
 
 ```
@@ -295,7 +293,6 @@ A corresponding `ProductImporter` might look like this:
  */
 class ProductImporter extends AbstractCommandBasedImporter
 {
-
     /**
      * @var string
      */
@@ -323,7 +320,7 @@ class ProductImporter extends AbstractCommandBasedImporter
 
     /**
      * @var string
-    */
+     */
     protected $nodeTypeName = 'Acme.MyShop:Product';
 
     /**
