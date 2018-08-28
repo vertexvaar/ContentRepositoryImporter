@@ -24,20 +24,20 @@ to discover.
 It's important to update the ```count``` property when you process data from the external source. During the processing,
 you can decide to skip some data (invalid data, missing values, ...) so we can not use the SQL count feature.
 
-Try to do most of the data cleaning up in the data provider, so the data would arrive to the importer ready for insertion. 
+Try to do most of the data cleaning up in the data provider, so the data would arrive to the importer ready for insertion.
 Basically the array build by the provider should contains the data with the property name that match your node type property name.
-If you need to transport value that will not match the node properties, please prefix them with '_'. 
+If you need to transport value that will not match the node properties, please prefix them with '_'.
 
 There is some magic value, those values MUST be on the first level of the array:
 
 - **__identifier** (optional) This UUID will be used in the imported node, you should use ```AbstractImporter::applyProperties``` to have this feature, used by default
-- **__externalIdentifier** (required) The external identifier of the data, this one is really important. The package keep track of imported data 
+- **__externalIdentifier** (required) The external identifier of the data, this one is really important. The package keep track of imported data
 - **__label** (required) The label of this record used by the importer mainly for logging (this value is not imported, but useful to follow the process)
 if you run twice the same import, the imported node will be updated and not created.
 
 **Tips**: If the properties of your nodes are not at the first level of the array, you can override the method ```AbstractImporter::getPropertiesFromDataProviderPayload```
 
-### Output of the provider 
+### Output of the provider
 
 Your provider should output something like this:
 
@@ -51,8 +51,8 @@ Your provider should output something like this:
 	]
 ```
 
-**Tips**: If your provider does not return an array, you MUST registrer a TypeConverter to convert it to an array. The property mapper is 
-used automatically by the Importer. 
+**Tips**: If your provider does not return an array, you MUST registrer a TypeConverter to convert it to an array. The property mapper is
+used automatically by the Importer.
 
 ### Content Dimensions support
 
@@ -65,7 +65,7 @@ If your data provider follow this convention, the importer can automatically cre
 		'title' => 'My title'
 		'year' => 1999
 		'text' => '...',
-                       
+
 	    '@dimensions' => [
 		   '@en' => [
 			   '@strategy' => 'merge',
@@ -101,7 +101,7 @@ part you import the taxonomy, and in the second parts you map documents with the
 Vault is simply a cache accessible in the importer and data provider by calling ```$this->vault->set($key, $name)``` and ```$this->vault->get($key)```. The
 current preset is the namespace, so you can use simple keys like name, ids, ...
 
-The cache is flushed if you call ```flow import:init --preset your-preset```. 
+The cache is flushed if you call ```flow import:init --preset your-preset```.
 
 ### Basic provider
 
@@ -140,9 +140,9 @@ A basic Importer
 Every data importer must extend the ``AbstractImporter`` abstract class or implement the interface ```ImporterInterface```.
 
 In the `processRecord` method you handle the processing of every record, such as creating Content Repository node for each incoming data record.
- 
+
 Do not forget to register the processed nodes with `registerNodeProcessing`. The method will handle feature like logging and tracking of imported node to decide if the local node need to be created or updated.
- 
+
 ```php
 class ProductImporter extends AbstractImporter
 {
